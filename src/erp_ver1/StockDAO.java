@@ -18,14 +18,15 @@ public class StockDAO implements DBcrud{
 		StockDTO stock = (StockDTO)dto;
 		
 		String query = "INSERT INTO stock " + 
-							"(rm_name, rm_enExEa, rm_TotalEa) VALUE (?, ?, ?)";
+							"(rm_name, rm_enExEa, rm_TotalEa, recDate) VALUE (?, ?, ?, ?)";
 		
 		try {
 			con = DBcon.getConn();
 			pstmt = con.prepareStatement(query);
 			pstmt.setString(1, stock.getRm_name());
 			pstmt.setInt(2, stock.getRm_enExEa());
-			pstmt.setInt(3, stock.getRm_TotalEa());		
+			pstmt.setInt(3, stock.getRm_TotalEa());
+			pstmt.setTimestamp(4, Timestamp.valueOf(stock.getRecDate()));
 			int result = pstmt.executeUpdate();
 			
 			if(result == 1) {
