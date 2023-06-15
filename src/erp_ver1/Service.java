@@ -15,8 +15,8 @@ public class Service {
 		public void updateStock(StockDTO s) {
 			StockDAO dao = new StockDAO();
 			Object dto = s;
-			s.setRm_TotalEa(s.getRm_TotalEa() + s.getRm_enExEa());
-			if (s.getRm_enExEa() >= 0 ) {
+			s.setS_totalAmount(s.getS_totalAmount() + s.getS_amount());
+			if (s.getS_amount() >= 0 ) {
 				s.setRecDate(LocalDateTime.now());
 			} else {
 				s.setForwDate(LocalDateTime.now());

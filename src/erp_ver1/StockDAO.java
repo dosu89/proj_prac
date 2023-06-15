@@ -17,16 +17,18 @@ public class StockDAO implements DBcrud{
 		boolean flag = false;
 		StockDTO stock = (StockDTO)dto;
 		
-		String query = "INSERT INTO stock " + 
-							"(rm_name, rm_enExEa, rm_TotalEa, recDate) VALUE (?, ?, ?, ?)";
+		String query = "INSERT INTO (m_code, s_amount, s_TotalAmount, recDate, forwDate) "
+				+ "(stock VALUE (?, ?, ?, ?, ?, ?)";
 		
 		try {
 			con = DBcon.getConn();
 			pstmt = con.prepareStatement(query);
-			pstmt.setString(1, stock.getRm_name());
-			pstmt.setInt(2, stock.getRm_enExEa());
-			pstmt.setInt(3, stock.getRm_TotalEa());
-			pstmt.setTimestamp(4, Timestamp.valueOf(stock.getRecDate()));
+			pstmt.setInt(1, stock.getS_no());
+			pstmt.setString(2, stock.getM_code());
+			pstmt.setInt(3, stock.getS_amount());
+			pstmt.setInt(4, stock.getS_totalAmount());
+			pstmt.setTimestamp(5, Timestamp.valueOf(stock.getRecDate()));
+			pstmt.setTimestamp(5, Timestamp.valueOf(stock.getForwDate()));
 			int result = pstmt.executeUpdate();
 			
 			if(result == 1) {
@@ -65,14 +67,14 @@ public class StockDAO implements DBcrud{
 			
 			if (rs != null) {
 				while(rs.next()) {
-					int rm_no = rs.getInt("rm_no");
-					String rm_name = rs.getString("rm_name");
-					int rm_enExEa = rs.getInt("rm_enExEa");
-					int rm_TotalEa = rs.getInt("rm_TotalEa");
+					int s_no = rs.getInt("s_no");
+					String m_code = rs.getString("m_code");
+					int s_amount = rs.getInt("s_amount");
+					int s_totalAmount = rs.getInt("s_totalAmount");
 					LocalDateTime recDate = rs.getTimestamp("recDate").toLocalDateTime();
 					LocalDateTime forwDate = rs.getTimestamp("forwDate").toLocalDateTime();
 					StockDTO dto = 
-							new StockDTO(rm_no, rm_name, rm_enExEa, rm_TotalEa, recDate, forwDate);
+							new StockDTO(s_no, m_code, s_amount, s_totalAmount, recDate, forwDate);
 					list.add(dto);
 				}
 			}
@@ -102,18 +104,18 @@ public class StockDAO implements DBcrud{
 		boolean flag = false;
 		StockDTO stock = (StockDTO)dto;
 		
-		String query = "UPDATE stock SET rm_name = ?, rm_enExEa = ?, rm_TotalEa = ?, recDate = ?, forwDate = ? "
-							+ "WHERE rm_no = ?"; 
+		String query = "UPDATE stock SET m_code = ?, s_amount = ?, s_totalAmount = ?, recDate = ?, forwDate = ? "
+							+ "WHERE s_no = ?"; 
 		
 		try {
 			con = DBcon.getConn();
 			pstmt = con.prepareStatement(query);
-			pstmt.setString(1, stock.getRm_name());
-			pstmt.setInt(2, stock.getRm_enExEa());
-			pstmt.setInt(3, stock.getRm_TotalEa());
+			pstmt.setString(1, stock.getM_code());
+			pstmt.setInt(2, stock.getS_amount());
+			pstmt.setInt(3, stock.getS_totalAmount());
 			pstmt.setTimestamp(4, Timestamp.valueOf(stock.getRecDate()));
 			pstmt.setTimestamp(5, Timestamp.valueOf(stock.getForwDate()));
-			pstmt.setInt(6, stock.getRm_no());
+			pstmt.setInt(6, stock.getS_no());
 			int result = pstmt.executeUpdate();
 			
 			if (result == 1) {
@@ -145,12 +147,12 @@ public class StockDAO implements DBcrud{
 		StockDTO stock = (StockDTO)dto;
 		boolean flag = false;
 		
-		String query = "DELETE FROM stock WHERE rm_no=?";
+		String query = "DELETE FROM stock WHERE s_no=?";
 		
 		try {
 			con = DBcon.getConn();
 			pstmt = con.prepareStatement(query);
-			pstmt.setInt(1, stock.getRm_no());
+			pstmt.setInt(1, stock.getS_no());
 			int result = pstmt.executeUpdate();
 			
 			if (result == 1)

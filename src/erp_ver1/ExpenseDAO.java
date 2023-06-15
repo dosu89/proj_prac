@@ -17,16 +17,16 @@ public class ExpenseDAO implements DBcrud{
 		ExpenseDTO expense = (ExpenseDTO)dto;
 		boolean flag = false;
 		
-		String query = "INSERT INTO expense (e_name, e_ea, e_price, e_date) VALUE "
-				+ "(?, ?, ?, ?)";
+		String query = "INSERT INTO expense VALUE (?, ?, ?, ?, ?)";
 				
 		try {
 			con = DBcon.getConn();
 			pstmt = con.prepareStatement(query);
-			pstmt.setString(1, expense.getE_name());
-			pstmt.setInt(2, expense.getE_ea());
-			pstmt.setInt(3, expense.getE_price());
-			pstmt.setTimestamp(4, Timestamp.valueOf(expense.getE_date()));
+			pstmt.setInt(1, expense.getE_no());
+			pstmt.setString(2, expense.getM_code());
+			pstmt.setInt(3, expense.getE_cost());
+			pstmt.setInt(4, expense.getE_amount());
+			pstmt.setTimestamp(5, Timestamp.valueOf(expense.getE_date()));
 			int result = pstmt.executeUpdate();
 			
 			if (result ==1 )
@@ -64,11 +64,11 @@ public class ExpenseDAO implements DBcrud{
 			while(rs.next()) {
 				if( rs != null ) {
 					int e_no = rs.getInt("e_no");
-					String e_name = rs.getNString("e_name");
-					int e_ea = rs.getInt("e_ea");
-					int e_price = rs.getInt("e_price");
+					String m_code = rs.getNString("m_code");
+					int e_cost = rs.getInt("e_cost");
+					int e_amount = rs.getInt("e_amount");
 					LocalDateTime e_date = rs.getTimestamp("e_date").toLocalDateTime();
-					ExpenseDTO dto = new ExpenseDTO(e_no, e_name, e_ea, e_price, e_date);
+					ExpenseDTO dto = new ExpenseDTO(e_no, m_code, e_cost, e_amount, e_date);
 					list.add(dto);
 				}
 			}
@@ -96,15 +96,15 @@ public class ExpenseDAO implements DBcrud{
 		ExpenseDTO expense = (ExpenseDTO)dto;
 		boolean flag = false;
 		
-		String query = "UPDATE expense SET e_name = ?, e_ea = ?, e_price = ?, e_date = ? "
+		String query = "UPDATE expense SET m_code = ?, e_cost = ?, e_amount = ?, e_date = ? "
 							+ "WHERE e_no = ?";
 		
 		try {
 			con = DBcon.getConn();
 			pstmt = con.prepareStatement(query);
-			pstmt.setString(1, expense.getE_name());
-			pstmt.setInt(2, expense.getE_ea());
-			pstmt.setInt(3, expense.getE_price());
+			pstmt.setString(1, expense.getM_code());
+			pstmt.setInt(2, expense.getE_cost());
+			pstmt.setInt(3, expense.getE_amount());
 			pstmt.setTimestamp(4, Timestamp.valueOf(expense.getE_date()));
 			pstmt.setInt(5, expense.getE_no());
 			int result = pstmt.executeUpdate();
@@ -159,5 +159,4 @@ public class ExpenseDAO implements DBcrud{
 		}
 		return flag;
 	}
-
 }
